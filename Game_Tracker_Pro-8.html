@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>Game Tracker</title>
+<title>Uno No Mercy</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f3f5f9;--card:#fff;--text:#111827;--muted:#64748b;--line:#e2e8f0;--a:#4f46e5;--a2:#eef2ff;--green:#059669;--red:#dc2626;--gold:#d97706;--shadow:0 8px 28px #0f172a12}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -28,7 +29,7 @@ button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1100px;mar
 <body>
 <div class="app">
 <header class="top">
- <div class="brand">🎮 Game Tracker</div>
+ <div class="brand">🎮 Uno No Mercy</div>
  <div class="actions"><button class="btn secondary small" onclick="settings()">⚙</button><button class="btn small" onclick="openMatch()">＋ Match</button></div>
 </header>
 <main id="view" class="wrap"></main>
@@ -43,12 +44,48 @@ button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1100px;mar
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div><div class="toast" id="toast"></div>
 
 <script>
-const KEY='game_tracker_pro_v2';
+const SUPABASE_URL = 'https://azcbpramtbjsufhcgoub.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_yjqbb9kMztjEei6VW3W1zQ_mcyK8Z9g';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+const KEY='uno_no_mercy_v2';
 let db=JSON.parse(localStorage.getItem(KEY)||'{"players":[],"matches":[],"settings":{"theme":"light"}}');
 db.settings=db.settings||{}; db.settings.activePlayers=Array.isArray(db.settings.activePlayers)?db.settings.activePlayers:[];
 let tab='home';
 const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+async function syncFromSupabase(){
+ if(!supabaseClient) return;
+ try {
+  const { data: pData } = await supabaseClient.from('players').select('*');
+  const { data: mData } = await supabaseClient.from('matches').select('*');
+  const { data: rData } = await supabaseClient.from('match_results').select('*');
+  
+  if(pData) {
+   db.players = pData.map(p => ({ id: p.id, name: p.name }));
+  }
+  if(mData && rData) {
+   db.matches = mData.map(m => {
+    const res = rData.filter(r => r.match_id === m.id).map(r => ({
+     playerId: r.player_id,
+     place: Number(r.position),
+     points: Number(r.points)
+    }));
+    return {
+     id: m.id,
+     date: m.created_at || m.played_at || new Date().toISOString(),
+     results: res
+    };
+   });
+  }
+  save();
+  render();
+ } catch(e){
+  console.error(e);
+ }
+}
+
 function save(){localStorage.setItem(KEY,JSON.stringify(db))}
 function toast(s){let x=document.getElementById('toast');x.textContent=s;x.style.display='block';setTimeout(()=>x.style.display='none',1700)}
 function go(t){tab=t;render()}
@@ -102,7 +139,7 @@ function home(){
  <div class="card stat"><span class="muted">Today's pts</span><b>${today.reduce((a,p)=>a+p.points,0)}</b></div></div>
  <div class="section"><h2>🏆 Current Leader</h2></div>
  ${leader?`<div class="card"><div class="row"><span class="medal">👑</span><div><b>${esc(leader.name)}</b><div class="muted">${leader.points} pts · ${leader.wins} wins · ${leader.matches} matches</div></div></div></div>`:
-`<div class="card"><div style="font-size:30px">👋</div><h3 style="margin:7px 0">Welcome to Game Tracker!</h3><div class="muted">Add your players once, then select who is present for each match.</div></div>`}
+`<div class="card"><div style="font-size:30px">👋</div><h3 style="margin:7px 0">Welcome to Uno No Mercy!</h3><div class="muted">Add your players once, then select who is present for each match.</div></div>`}
  <div class="card" style="margin-top:12px"><div class="row"><div><b>Quick Actions</b><div class="muted">Add more players anytime or start the next match.</div></div></div><div class="row" style="margin-top:12px"><button class="btn" onclick="openPlayer()">＋ Add Player</button><button class="btn secondary" onclick="go('players')">👥 Select Players</button><button class="btn secondary" onclick="startActiveMatch()">🎮 Add Match</button></div></div>
  <div class="section"><h2>☀️ Today's Leader</h2></div>
  ${top&&top.matches?`<div class="card"><b>${esc(top.name)}</b> — ${top.points} points · ${top.wins} wins</div>`:`<div class="card empty">No match played today.</div>`}
@@ -161,7 +198,7 @@ function statsPage(){
  let s=calc(),tot=s.reduce((a,p)=>a+p.points,0),rec=records();
  return `<div class="section"><h2>📊 Statistics</h2></div>
  <div class="grid"><div class="card stat"><span class="muted">Total Points</span><b>${tot}</b></div><div class="card stat"><span class="muted">Total Wins</span><b>${s.reduce((a,p)=>a+p.wins,0)}</b></div><div class="card stat"><span class="muted">Avg Match Size</span><b>${db.matches.length?(db.matches.reduce((a,m)=>a+m.results.length,0)/db.matches.length).toFixed(1):0}</b></div><div class="card stat"><span class="muted">Longest Streak</span><b>${Math.max(0,...s.map(p=>p.bestStreak))}</b></div></div>
- <div class="section"><h2>📈 Player Progress</h2></div><div class="card">${s.map(p=>`<div style="margin:12px 0"><div class="row"><b>${esc(p.name)}</b><span class="right">${p.points} pts</span></div><div class="bar" style="margin-top:5px"><i style="width:${tot?Math.max(2,p.points/tot*100):0}%"></i></div><div class="kpi" style="margin-top:4px">Avg ${p.avg.toFixed(2)} · Win rate ${p.winRate.toFixed(1)}% · Streak ${p.currentStreak}</div></div>`).join('')||'<div class="empty">No statistics yet.</div>'}</div>
+ <div class="section"><h2>📈 Player Progress</h2></div><div class="card">${s.map(p=>`<div style="margin:12px 0"><div class="row"><b>${esc(p.name)}</b><span class="right">${p.points} pts</span></div><div class="bar" style="margin-top:5px"><i style="width:${tot?Math.max(2,p.points/tot*100):0}%"></i></div><div class="kpi" style="margin-top:4px">Avg ${p.avg.toFixed(2)} · Win rate ${p.winRate.toFixed(1)}\% · Streak ${p.currentStreak}</div></div>`).join('')||'<div class="empty">No statistics yet.</div>'}</div>
  <div class="section"><h2>🔥 Records</h2></div><div class="grid2"><div class="card"><b>Most points</b><div>${rec.points.name||'—'} · ${rec.points.value}</div></div><div class="card"><b>Most wins</b><div>${rec.wins.name||'—'} · ${rec.wins.value}</div></div><div class="card"><b>Highest single match</b><div>${rec.single.name||'—'} · ${rec.single.value}</div></div><div class="card"><b>Longest streak</b><div>${rec.streak.name||'—'} · ${rec.streak.value}</div></div></div>`;
 }
 function records(){
@@ -172,8 +209,31 @@ function records(){
  return out;
 }
 function openPlayer(){modal(`<h2>Add Player</h2><div class="field"><label>Player name</label><input id="newname" maxlength="30" placeholder="Riyaz"></div><div class="row" style="justify-content:flex-end"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="addPlayer()">Add</button></div>`)}
-function addPlayer(){let n=document.getElementById('newname').value.trim();if(!n)return toast('Enter a name');if(db.players.some(p=>p.name.toLowerCase()===n.toLowerCase()))return toast('Player already exists');db.players.push({id:uid(),name:n});save();closeModal();render();toast('Player added')}
-function delPlayer(id){if(db.matches.some(m=>m.results.some(r=>r.playerId===id)))return toast('Cannot delete: player has match history');if(confirm('Delete player?')){db.players=db.players.filter(p=>p.id!==id);save();render()}}
+async function addPlayer(){
+ let n=document.getElementById('newname').value.trim();
+ if(!n)return toast('Enter a name');
+ if(db.players.some(p=>p.name.toLowerCase()===n.toLowerCase()))return toast('Player already exists');
+ 
+ const newId = uid();
+ db.players.push({id:newId,name:n});
+ save();closeModal();render();toast('Player added');
+
+ if(supabaseClient){
+  await supabaseClient.from('players').insert([{ id: newId, name: n }]);
+  syncFromSupabase();
+ }
+}
+async function delPlayer(id){
+ if(db.matches.some(m=>m.results.some(r=>r.playerId===id)))return toast('Cannot delete: player has match history');
+ if(confirm('Delete player?')){
+  db.players=db.players.filter(p=>p.id!==id);
+  save();render();
+  if(supabaseClient){
+   await supabaseClient.from('players').delete().eq('id', id);
+   syncFromSupabase();
+  }
+ }
+}
 function openMatch(existing, preset){
  if(db.players.length<2)return toast('Add at least 2 players');
  let selected=existing?.results.map(r=>r.playerId)||(preset||db.settings.activePlayers||[]);
@@ -188,15 +248,44 @@ function buildPlaces(old=[]){
  let oldMap={};old.forEach(r=>oldMap[r.playerId]=r.place);
  box.innerHTML=`<div class="field"><label>Finishing order — points calculate automatically</label>${ids.map((id,i)=>`<div class="place"><div class="num">${i+1}</div><select class="order" data-id="${id}"><option value="">Select player</option>${ids.map(x=>`<option value="${x}" ${oldMap[x]===i+1?'selected':''}>${esc(pname(x))}</option>`).join('')}</select></div>`).join('')}</div>`;
 }
-function saveMatch(editId){
+async function saveMatch(editId){
  let ids=checked(),orders=[...document.querySelectorAll('.order')].map(x=>x.value);if(ids.length<2)return toast('Select at least 2 players');if(orders.some(x=>!x)||new Set(orders).size!==orders.length)return toast('Complete a unique finishing order');
  let n=ids.length,results=orders.map((id,i)=>({playerId:id,place:i+1,points:scoring(n,i+1)})),date=new Date(document.getElementById('mdate').value);
  if(isNaN(date))return toast('Invalid date');
- let m={id:editId||uid(),date:date.toISOString(),results};
+ 
+ const matchId = editId || uid();
+ let m={id:matchId,date:date.toISOString(),results};
  if(editId)db.matches=db.matches.map(x=>x.id===editId?m:x);else {db.matches.push(m);db.settings.activePlayers=[];}
- save();closeModal();render();toast(editId?'Match updated':'Match saved')}
+ save();closeModal();render();toast(editId?'Match updated':'Match saved');
+
+ if(supabaseClient){
+  if(editId){
+   await supabaseClient.from('match_results').delete().eq('match_id', editId);
+   await supabaseClient.from('matches').delete().eq('id', editId);
+  }
+  await supabaseClient.from('matches').insert([{ id: matchId, player_count: n, created_at: date.toISOString() }]);
+  const resInserts = results.map(r => ({
+   match_id: matchId,
+   player_id: r.playerId,
+   position: r.place,
+   points: r.points
+  }));
+  await supabaseClient.from('match_results').insert(resInserts);
+  syncFromSupabase();
+ }
+}
 function editMatch(id){openMatch(db.matches.find(m=>m.id===id))}
-function delMatch(id){if(confirm('Delete this match? All derived statistics will recalculate.')){db.matches=db.matches.filter(m=>m.id!==id);save();render();toast('Match deleted')}}
+async function delMatch(id){
+ if(confirm('Delete this match? All derived statistics will recalculate.')){
+  db.matches=db.matches.filter(m=>m.id!==id);
+  save();render();toast('Match deleted');
+  if(supabaseClient){
+   await supabaseClient.from('match_results').delete().eq('match_id', id);
+   await supabaseClient.from('matches').delete().eq('id', id);
+   syncFromSupabase();
+  }
+ }
+}
 function profile(id){
  let p=calc(db.players.filter(x=>x.id===id))[0],rows=p.rows.slice().sort((a,b)=>b.date.localeCompare(a.date));
  modal(`<h2>👤 ${esc(p.name)}</h2><div class="grid"><div class="card stat"><span class="muted">Points</span><b>${p.points}</b></div><div class="card stat"><span class="muted">Wins</span><b>${p.wins}</b></div><div class="card stat"><span class="muted">Win rate</span><b>${p.winRate.toFixed(0)}%</b></div><div class="card stat"><span class="muted">Average</span><b>${p.avg.toFixed(1)}</b></div></div>
@@ -205,16 +294,18 @@ function profile(id){
  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="closeModal()">Close</button></div>`);
 }
 function settings(){
- modal(`<h2>⚙ Settings & Backup</h2><div class="card"><b>Offline storage</b><div class="muted">All players and matches are saved in this browser/device using localStorage. No server or account is used.</div></div>
+ modal(`<h2>⚙ Settings & Backup</h2><div class="card"><b>Storage Info</b><div class="muted">Data is synced with Supabase Database and saved locally in this browser.</div></div>
  <div class="section"><h3>💾 Data</h3></div><div class="row"><button class="btn" onclick="backup();closeModal()">📤 Backup JSON</button><button class="btn secondary" onclick="restore();closeModal()">📥 Restore JSON</button></div>
  <div class="section"><h3>🏆 Point System</h3></div><div class="card muted">For N participants: 1st = N, 2nd = N−1, 3rd = N−2 … last = 0.<br><br>Example: 6 players → 6, 5, 4, 3, 2, 0.</div>
  <div class="section"><h3>🗑️ Danger zone</h3></div><button class="btn danger" onclick="resetAll()">Delete all data</button>
  <div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn" onclick="closeModal()">Close</button></div>`);
 }
-function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='game-tracker-backup-'+dateKey(new Date())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
-function restore(){let i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{let f=i.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.players)||!Array.isArray(x.matches))throw Error();db=x;save();render();toast('Backup restored')}catch(e){toast('Invalid backup file')}};r.readAsText(f)};i.click()}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='uno-no-mercy-backup-'+dateKey(new Date())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function restore(){let i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{let f=i.files[0];if(!f)return;let r=new FileReader();r.onload=async()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.players)||!Array.isArray(x.matches))throw Error();db=x;save();render();toast('Backup restored')}catch(e){toast('Invalid backup file')}};r.readAsText(f)};i.click()}
 function resetAll(){if(confirm('Delete ALL players, matches and data? This cannot be undone unless you have a backup.')){db={players:[],matches:[],settings:{theme:'light'}};save();closeModal();render();toast('All data deleted')}}
+
 render();
+syncFromSupabase();
 </script>
 </body>
 </html>
