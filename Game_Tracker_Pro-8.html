@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Game Tracker</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--text:#111827;--muted:#64748b;--line:#e2e8f0;--a:#4f46e5;--a2:#eef2ff;--green:#059669;--red:#dc2626;--gold:#d97706;--shadow:0 8px 28px #0f172a12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1100px;margin:auto;min-height:100vh;padding-bottom:76px}
+.top{position:sticky;top:0;z-index:20;background:#ffffffec;backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:13px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}.brand{font-weight:900;font-size:19px}.top .actions{display:flex;gap:7px}
+.wrap{padding:16px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow)}.stat b{font-size:25px;display:block;margin-top:3px}.muted{color:var(--muted);font-size:13px}
+.section{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 10px}.section h2{font-size:18px;margin:0}.section h3{font-size:15px;margin:0}
+.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--a);color:#fff;font-weight:750}.btn.secondary{background:var(--a2);color:var(--a)}.btn.danger{background:#fee2e2;color:var(--red)}.btn.green{background:#d1fae5;color:#047857}.btn.small{padding:7px 10px;font-size:12px}
+.row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.right{margin-left:auto}.pill{display:inline-flex;align-items:center;background:var(--a2);color:var(--a);padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#fff;border-top:1px solid var(--line)}.navin{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}.nav button{border:0;background:none;color:var(--muted);padding:8px 2px;font-size:10px}.nav button.active{color:var(--a);font-weight:800}.nav span{display:block;font-size:20px}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px 7px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}.table th{color:var(--muted);font-size:11px}.rank{font-weight:900;width:30px}.empty{text-align:center;padding:28px;color:var(--muted)}
+.field{margin:11px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:var(--card);color:var(--text)}
+.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.checkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.check{border:1px solid var(--line);padding:9px;border-radius:11px;font-size:13px}.check input{margin-right:6px}
+.modal{position:fixed;inset:0;background:#0008;z-index:50;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:min(700px,100%);max-height:94vh;overflow:auto;background:var(--card);border-radius:24px 24px 0 0;padding:18px}.sheet h2{margin:2px 0 15px}
+.place{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.place .num{font-weight:900;text-align:center}.place select{padding:10px;border:1px solid var(--line);border-radius:10px;width:100%;background:var(--card);color:var(--text)}
+.toast{display:none;position:fixed;bottom:76px;left:50%;transform:translateX(-50%);z-index:80;background:#111827;color:#fff;padding:10px 14px;border-radius:12px;font-size:13px}
+.bar{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--a);border-radius:99px}.medal{font-size:22px}.kpi{font-size:12px;color:var(--muted)}.kpi b{color:var(--text)}
+@media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.wrap{padding:12px}.grid2{grid-template-columns:1fr}.table th,.table td{padding:8px 5px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand">🎮 Game Tracker</div>
+ <div class="actions"><button class="btn secondary small" onclick="settings()">⚙</button><button class="btn small" onclick="openMatch()">＋ Match</button></div>
+</header>
+<main id="view" class="wrap"></main>
+<nav class="nav"><div class="navin">
+<button data-t="home" onclick="go('home')"><span>⌂</span>Home</button>
+<button data-t="matches" onclick="go('matches')"><span>🎮</span>Matches</button>
+<button data-t="ranking" onclick="go('ranking')"><span>🏆</span>Ranking</button>
+<button data-t="players" onclick="go('players')"><span>👥</span>Players</button>
+<button data-t="stats" onclick="go('stats')"><span>📊</span>Stats</button>
+</div></nav>
+</div>
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div><div class="toast" id="toast"></div>
+
+<script>
+const KEY='game_tracker_pro_v2';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"players":[],"matches":[],"settings":{"theme":"light"}}');
+db.settings=db.settings||{}; db.settings.activePlayers=Array.isArray(db.settings.activePlayers)?db.settings.activePlayers:[];
+let tab='home';
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function toast(s){let x=document.getElementById('toast');x.textContent=s;x.style.display='block';setTimeout(()=>x.style.display='none',1700)}
+function go(t){tab=t;render()}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function modal(h){document.getElementById('sheet').innerHTML=h;document.getElementById('modal').classList.add('show')}
+function pname(id){return db.players.find(p=>p.id===id)?.name||'Unknown'}
+function dateKey(d){return new Date(d).toISOString().slice(0,10)}
+function fmt(d){return new Date(d).toLocaleString(undefined,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function scoring(n,pos){return pos===n?0:n-pos}
+function participants(m){return m.results.map(r=>r.playerId)}
+function matchesFor(filters={}){
+ let ms=[...db.matches];
+ if(filters.count)ms=ms.filter(m=>m.results.length===+filters.count);
+ if(filters.from)ms=ms.filter(m=>dateKey(m.date)>=filters.from);
+ if(filters.to)ms=ms.filter(m=>dateKey(m.date)<=filters.to);
+ if(filters.players?.length)ms=ms.filter(m=>filters.players.every(id=>participants(m).includes(id)));
+ return ms;
+}
+function calc(players=db.players,matches=db.matches){
+ return players.map(p=>{
+  let rows=[];matches.forEach(m=>{let r=m.results.find(x=>x.playerId===p.id);if(r)rows.push({...r,date:m.date,match:m})});
+  let wins=rows.filter(r=>r.place===1).length, points=rows.reduce((a,r)=>a+r.points,0);
+  let cur=0,best=0; [...rows].sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>{if(r.place===1){cur++;best=Math.max(best,cur)}else cur=0});
+  let streak=0;[...rows].sort((a,b)=>b.date.localeCompare(a.date)).forEach((r,i)=>{if(i===streak&&r.place===1)streak++;});
+  return {...p,matches:rows.length,points,wins,first:wins,second:rows.filter(r=>r.place===2).length,third:rows.filter(r=>r.place===3).length,
+   podium:rows.filter(r=>r.place<=3).length,avg:rows.length?points/rows.length:0,winRate:rows.length?wins/rows.length*100:0,
+   podiumRate:rows.length?rows.filter(r=>r.place<=3).length/rows.length*100:0,bestStreak:best,currentStreak:streak,
+   high:rows.length?Math.max(...rows.map(r=>r.points)):0,rows};
+ }).sort((a,b)=>b.points-a.points||b.wins-a.wins||b.avg-a.avg);
+}
+function periodMatches(period){
+ let now=new Date(), from=null,to=dateKey(now);
+ if(period==='today')from=to;
+ if(period==='7')from=dateKey(new Date(now-6*86400000));
+ if(period==='30')from=dateKey(new Date(now-29*86400000));
+ if(period==='month'){from=new Date(now.getFullYear(),now.getMonth(),1).toISOString().slice(0,10)}
+ if(period==='year'){from=new Date(now.getFullYear(),0,1).toISOString().slice(0,10)}
+ return matchesFor({from,to});
+}
+function render(){
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.t===tab));
+ document.getElementById('view').innerHTML=tab==='home'?home():tab==='matches'?matchesPage():tab==='ranking'?rankingPage():tab==='players'?playersPage():statsPage();
+ if(tab==='ranking') setTimeout(rankRender,0);
+}
+function home(){
+ let s=calc(),tm=periodMatches('today'),today=calc(db.players,tm), top=today[0], leader=s[0];
+ return `<div class="grid">
+ <div class="card stat"><span class="muted">Matches</span><b>${db.matches.length}</b></div>
+ <div class="card stat"><span class="muted">Players</span><b>${db.players.length}</b></div>
+ <div class="card stat"><span class="muted">Today</span><b>${tm.length}</b></div>
+ <div class="card stat"><span class="muted">Today's pts</span><b>${today.reduce((a,p)=>a+p.points,0)}</b></div></div>
+ <div class="section"><h2>🏆 Current Leader</h2></div>
+ ${leader?`<div class="card"><div class="row"><span class="medal">👑</span><div><b>${esc(leader.name)}</b><div class="muted">${leader.points} pts · ${leader.wins} wins · ${leader.matches} matches</div></div></div></div>`:
+`<div class="card"><div style="font-size:30px">👋</div><h3 style="margin:7px 0">Welcome to Game Tracker!</h3><div class="muted">Add your players once, then select who is present for each match.</div></div>`}
+ <div class="card" style="margin-top:12px"><div class="row"><div><b>Quick Actions</b><div class="muted">Add more players anytime or start the next match.</div></div></div><div class="row" style="margin-top:12px"><button class="btn" onclick="openPlayer()">＋ Add Player</button><button class="btn secondary" onclick="go('players')">👥 Select Players</button><button class="btn secondary" onclick="startActiveMatch()">🎮 Add Match</button></div></div>
+ <div class="section"><h2>☀️ Today's Leader</h2></div>
+ ${top&&top.matches?`<div class="card"><b>${esc(top.name)}</b> — ${top.points} points · ${top.wins} wins</div>`:`<div class="card empty">No match played today.</div>`}
+ <div class="section"><h2>Recent Matches</h2><button class="btn secondary small" onclick="go('matches')">View all</button></div>
+ ${db.matches.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map(matchCard).join('')||`<div class="card empty">No matches yet.</div>`}`;
+}
+function matchCard(m){
+ return `<div class="card" style="margin:8px 0"><div class="row"><b>${fmt(m.date)}</b><span class="pill">${m.results.length} players</span><span class="pill">${m.results.reduce((a,r)=>a+r.points,0)} pts</span></div>
+ <ol style="margin:10px 0 0;padding-left:24px">${m.results.slice().sort((a,b)=>a.place-b.place).map(r=>`<li>${esc(pname(r.playerId))} — <b>${r.points}</b> pt</li>`).join('')}</ol></div>`;
+}
+function matchesPage(){
+ return `<div class="section"><h2>🗓️ Match History</h2><button class="btn small" onclick="openMatch()">＋ Add Match</button></div>
+ ${db.matches.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div style="margin:8px 0">${matchCard(m)}<div class="row" style="margin-top:-3px;padding:0 5px"><button class="btn secondary small" onclick="editMatch('${m.id}')">✏️ Edit</button><button class="btn danger small" onclick="delMatch('${m.id}')">Delete</button></div></div>`).join('')||`<div class="card empty">No matches recorded.</div>`}`;
+}
+function rankingPage(){
+ return `<div class="section"><h2>🏆 Custom Ranking</h2></div>
+ <div class="card"><div class="filters">
+ <div><label class="muted">Players in match</label><select id="rcount" onchange="rankRender()"><option value="">All</option>${[3,4,5,6].map(n=>`<option value="${n}">${n} Players</option>`).join('')}</select></div>
+ <div><label class="muted">Period</label><select id="rperiod" onchange="rankRender()"><option value="all">All time</option><option value="today">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="month">This month</option><option value="year">This year</option><option value="custom">Custom</option></select></div>
+ <div><label class="muted">Metric</label><select id="rmetric" onchange="rankRender()"><option value="points">Total Points</option><option value="wins">Wins</option><option value="avg">Average</option><option value="winRate">Win Rate</option><option value="first">1st Places</option><option value="podium">Podiums</option><option value="currentStreak">Current Streak</option><option value="matches">Matches</option></select></div></div>
+ <div id="customDates" style="display:none"><div class="grid2"><div class="field"><label>From</label><input type="date" id="rfrom" onchange="rankRender()"></div><div class="field"><label>To</label><input type="date" id="rto" onchange="rankRender()"></div></div></div>
+ <div class="field"><label>Compare players — tick 2, 3, 4 or more names</label><div class="checkgrid">${db.players.map(p=>`<label class="check"><input type="checkbox" class="rplayer" value="${p.id}" onchange="rankRender()"> ${esc(p.name)}</label>`).join('')}</div></div></div>
+ <div id="rankBox"></div>
+ <div class="section"><h2>⚔️ Head-to-Head</h2></div>
+ <div class="card"><div class="grid2"><select id="h1">${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select><select id="h2">${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><button class="btn" style="margin-top:10px" onclick="h2h()">Compare</button><div id="h2hbox"></div></div>`;
+}
+function rankRender(){
+ let c=document.getElementById('rcount')?.value||'', per=document.getElementById('rperiod')?.value||'all', metric=document.getElementById('rmetric')?.value||'points';
+ let from='',to='';if(per==='custom'){document.getElementById('customDates').style.display='block';from=document.getElementById('rfrom').value;to=document.getElementById('rto').value}else if(per!=='all'){let ms=periodMatches(per);from=ms.length?dateKey(ms.reduce((a,m)=>a.date<m.date?a:m).date):'';to=ms.length?dateKey(ms.reduce((a,m)=>a.date>m.date?a:m).date):''}
+ let ps=[...document.querySelectorAll('.rplayer:checked')].map(x=>x.value),ms=matchesFor({count:c,from,to,players:ps});
+ let s=calc(db.players,ms).filter(p=>!ps.length||ps.includes(p.id));
+ s.sort((a,b)=>(b[metric]-a[metric])||b.points-a.points);
+ let max=Math.max(1,...s.map(p=>p[metric]||0));
+ document.getElementById('rankBox').innerHTML=`<div class="section"><h2>Results</h2><span class="muted">${ms.length} matches used</span></div><div class="card"><table class="table"><thead><tr><th>#</th><th>Player</th><th>${metric==='winRate'?'Win %':metric==='avg'?'Avg':metric}</th><th>Matches</th><th>Wins</th></tr></thead><tbody>${s.map((p,i)=>`<tr><td class="rank">${i+1}</td><td><b>${esc(p.name)}</b></td><td>${metric==='winRate'?p.winRate.toFixed(1)+'%':metric==='avg'?p.avg.toFixed(2):p[metric]}</td><td>${p.matches}</td><td>${p.wins}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No data</td></tr>'}</tbody></table></div>`;
+}
+function h2h(){
+ let a=document.getElementById('h1').value,b=document.getElementById('h2').value;if(!a||!b||a===b)return toast('Choose two different players');
+ let ms=matchesFor({players:[a,b]}),A=calc(db.players.filter(p=>p.id===a),ms)[0],B=calc(db.players.filter(p=>p.id===b),ms)[0];
+ document.getElementById('h2hbox').innerHTML=`<div class="grid2" style="margin-top:12px"><div class="card"><b>${esc(A.name)}</b><h2>${A.wins} wins</h2><div class="muted">${A.points} pts · avg ${A.avg.toFixed(1)}</div></div><div class="card"><b>${esc(B.name)}</b><h2>${B.wins} wins</h2><div class="muted">${B.points} pts · avg ${B.avg.toFixed(1)}</div></div></div><div class="muted" style="margin-top:10px">${ms.length} matches together · podiums: ${A.podium} vs ${B.podium}</div>`;
+}
+function playersPage(){
+ let active=new Set(db.settings.activePlayers||[]);
+ return `<div class="section"><div><h2>👥 Players</h2><div class="muted">Add names once. Tick ✓ for players who are with you for the next match.</div></div><button class="btn small" onclick="openPlayer()">＋ Player</button></div>
+ <div class="card" style="margin-bottom:12px"><div class="row"><b>🟢 Present for next match</b><span class="pill">${active.size} selected</span></div><div class="checkgrid" style="margin-top:10px">${db.players.map(p=>`<label class="check"><input type="checkbox" value="${p.id}" ${active.has(p.id)?'checked':''} onchange="toggleActive('${p.id}',this.checked)"> ✓ ${esc(p.name)}</label>`).join('')||'<div class="empty">No players yet. Add players first.</div>'}</div>${db.players.length?`<button class="btn" style="margin-top:12px" onclick="startActiveMatch()">🎮 Add Match — Start with selected players</button>`:''}</div>
+ ${db.players.map(p=>{let s=calc([p])[0];return `<div class="card" style="margin:8px 0"><div class="row"><div><b>${esc(p.name)}</b><div class="muted">${s.matches} matches · ${s.points} pts · ${s.wins} wins · ${s.winRate.toFixed(0)}% win rate</div></div><div class="right row"><button class="btn secondary small" onclick="profile('${p.id}')">Profile</button><button class="btn danger small" onclick="delPlayer('${p.id}')">×</button></div></div></div>`}).join('')||''}`;
+}
+function toggleActive(id,on){
+ let a=new Set(db.settings.activePlayers||[]); on?a.add(id):a.delete(id); db.settings.activePlayers=[...a]; save();
+ render();
+}
+function startActiveMatch(){
+ let ids=db.settings.activePlayers||[]; if(ids.length<2)return toast('Tick at least 2 players who are present'); openMatch(null,ids);
+}
+
+function statsPage(){
+ let s=calc(),tot=s.reduce((a,p)=>a+p.points,0),rec=records();
+ return `<div class="section"><h2>📊 Statistics</h2></div>
+ <div class="grid"><div class="card stat"><span class="muted">Total Points</span><b>${tot}</b></div><div class="card stat"><span class="muted">Total Wins</span><b>${s.reduce((a,p)=>a+p.wins,0)}</b></div><div class="card stat"><span class="muted">Avg Match Size</span><b>${db.matches.length?(db.matches.reduce((a,m)=>a+m.results.length,0)/db.matches.length).toFixed(1):0}</b></div><div class="card stat"><span class="muted">Longest Streak</span><b>${Math.max(0,...s.map(p=>p.bestStreak))}</b></div></div>
+ <div class="section"><h2>📈 Player Progress</h2></div><div class="card">${s.map(p=>`<div style="margin:12px 0"><div class="row"><b>${esc(p.name)}</b><span class="right">${p.points} pts</span></div><div class="bar" style="margin-top:5px"><i style="width:${tot?Math.max(2,p.points/tot*100):0}%"></i></div><div class="kpi" style="margin-top:4px">Avg ${p.avg.toFixed(2)} · Win rate ${p.winRate.toFixed(1)}% · Streak ${p.currentStreak}</div></div>`).join('')||'<div class="empty">No statistics yet.</div>'}</div>
+ <div class="section"><h2>🔥 Records</h2></div><div class="grid2"><div class="card"><b>Most points</b><div>${rec.points.name||'—'} · ${rec.points.value}</div></div><div class="card"><b>Most wins</b><div>${rec.wins.name||'—'} · ${rec.wins.value}</div></div><div class="card"><b>Highest single match</b><div>${rec.single.name||'—'} · ${rec.single.value}</div></div><div class="card"><b>Longest streak</b><div>${rec.streak.name||'—'} · ${rec.streak.value}</div></div></div>`;
+}
+function records(){
+ let s=calc(),out={};
+ const pick=(arr,key)=>{let p=arr.reduce((a,b)=>(b[key]>a[key]?b:a),arr[0]);return {name:p?.name||'',value:p?.[key]||0}};
+ out.points=pick(s,'points');out.wins=pick(s,'wins');out.streak=pick(s,'bestStreak');
+ let rows=[];db.matches.forEach(m=>m.results.forEach(r=>rows.push({name:pname(r.playerId),value:r.points})));out.single=rows.reduce((a,b)=>b.value>a.value?b:a,{});
+ return out;
+}
+function openPlayer(){modal(`<h2>Add Player</h2><div class="field"><label>Player name</label><input id="newname" maxlength="30" placeholder="Riyaz"></div><div class="row" style="justify-content:flex-end"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="addPlayer()">Add</button></div>`)}
+function addPlayer(){let n=document.getElementById('newname').value.trim();if(!n)return toast('Enter a name');if(db.players.some(p=>p.name.toLowerCase()===n.toLowerCase()))return toast('Player already exists');db.players.push({id:uid(),name:n});save();closeModal();render();toast('Player added')}
+function delPlayer(id){if(db.matches.some(m=>m.results.some(r=>r.playerId===id)))return toast('Cannot delete: player has match history');if(confirm('Delete player?')){db.players=db.players.filter(p=>p.id!==id);save();render()}}
+function openMatch(existing, preset){
+ if(db.players.length<2)return toast('Add at least 2 players');
+ let selected=existing?.results.map(r=>r.playerId)||(preset||db.settings.activePlayers||[]);
+ modal(`<h2>${existing?'✏️ Edit':'🎮 Add'} Match</h2><div class="field"><label>Date & time</label><input type="datetime-local" id="mdate" value="${existing?existing.date.slice(0,16):new Date().toISOString().slice(0,16)}"></div>
+ <div class="field"><label>Present players — ✓ means they are playing this match</label><div class="checkgrid">${db.players.map(p=>`<label class="check"><input class="part" type="checkbox" value="${p.id}" ${selected.includes(p.id)?'checked':''} onchange="buildPlaces()"> ${esc(p.name)}</label>`).join('')}</div></div><div id="places"></div>
+ <div class="row" style="justify-content:flex-end;margin-top:15px"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="saveMatch('${existing?.id||''}')">Save Match</button></div>`);
+ buildPlaces(existing?.results);
+}
+function checked(){return [...document.querySelectorAll('.part:checked')].map(x=>x.value)}
+function buildPlaces(old=[]){
+ let ids=checked(),box=document.getElementById('places');if(!box)return;if(ids.length<2){box.innerHTML='<div class="muted">Select at least 2 participants.</div>';return}
+ let oldMap={};old.forEach(r=>oldMap[r.playerId]=r.place);
+ box.innerHTML=`<div class="field"><label>Finishing order — points calculate automatically</label>${ids.map((id,i)=>`<div class="place"><div class="num">${i+1}</div><select class="order" data-id="${id}"><option value="">Select player</option>${ids.map(x=>`<option value="${x}" ${oldMap[x]===i+1?'selected':''}>${esc(pname(x))}</option>`).join('')}</select></div>`).join('')}</div>`;
+}
+function saveMatch(editId){
+ let ids=checked(),orders=[...document.querySelectorAll('.order')].map(x=>x.value);if(ids.length<2)return toast('Select at least 2 players');if(orders.some(x=>!x)||new Set(orders).size!==orders.length)return toast('Complete a unique finishing order');
+ let n=ids.length,results=orders.map((id,i)=>({playerId:id,place:i+1,points:scoring(n,i+1)})),date=new Date(document.getElementById('mdate').value);
+ if(isNaN(date))return toast('Invalid date');
+ let m={id:editId||uid(),date:date.toISOString(),results};
+ if(editId)db.matches=db.matches.map(x=>x.id===editId?m:x);else {db.matches.push(m);db.settings.activePlayers=[];}
+ save();closeModal();render();toast(editId?'Match updated':'Match saved')}
+function editMatch(id){openMatch(db.matches.find(m=>m.id===id))}
+function delMatch(id){if(confirm('Delete this match? All derived statistics will recalculate.')){db.matches=db.matches.filter(m=>m.id!==id);save();render();toast('Match deleted')}}
+function profile(id){
+ let p=calc(db.players.filter(x=>x.id===id))[0],rows=p.rows.slice().sort((a,b)=>b.date.localeCompare(a.date));
+ modal(`<h2>👤 ${esc(p.name)}</h2><div class="grid"><div class="card stat"><span class="muted">Points</span><b>${p.points}</b></div><div class="card stat"><span class="muted">Wins</span><b>${p.wins}</b></div><div class="card stat"><span class="muted">Win rate</span><b>${p.winRate.toFixed(0)}%</b></div><div class="card stat"><span class="muted">Average</span><b>${p.avg.toFixed(1)}</b></div></div>
+ <div class="section"><h3>Records</h3></div><div class="grid2"><div class="card kpi">1st <b>${p.first}</b> · 2nd <b>${p.second}</b> · 3rd <b>${p.third}</b></div><div class="card kpi">Podiums <b>${p.podium}</b> · Best streak <b>${p.bestStreak}</b> · Current <b>${p.currentStreak}</b></div></div>
+ <div class="section"><h3>Recent Form</h3></div><div class="card">${rows.slice(0,10).map(r=>`<div class="row" style="padding:7px 0;border-bottom:1px solid var(--line)"><span>${r.place===1?'🥇':r.place===2?'🥈':r.place===3?'🥉':r.place+'.'}</span><span>${fmt(r.date)}</span><span class="right"><b>${r.points} pts</b></span></div>`).join('')||'<div class="empty">No matches.</div>'}</div>
+ <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="closeModal()">Close</button></div>`);
+}
+function settings(){
+ modal(`<h2>⚙ Settings & Backup</h2><div class="card"><b>Offline storage</b><div class="muted">All players and matches are saved in this browser/device using localStorage. No server or account is used.</div></div>
+ <div class="section"><h3>💾 Data</h3></div><div class="row"><button class="btn" onclick="backup();closeModal()">📤 Backup JSON</button><button class="btn secondary" onclick="restore();closeModal()">📥 Restore JSON</button></div>
+ <div class="section"><h3>🏆 Point System</h3></div><div class="card muted">For N participants: 1st = N, 2nd = N−1, 3rd = N−2 … last = 0.<br><br>Example: 6 players → 6, 5, 4, 3, 2, 0.</div>
+ <div class="section"><h3>🗑️ Danger zone</h3></div><button class="btn danger" onclick="resetAll()">Delete all data</button>
+ <div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn" onclick="closeModal()">Close</button></div>`);
+}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='game-tracker-backup-'+dateKey(new Date())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function restore(){let i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{let f=i.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.players)||!Array.isArray(x.matches))throw Error();db=x;save();render();toast('Backup restored')}catch(e){toast('Invalid backup file')}};r.readAsText(f)};i.click()}
+function resetAll(){if(confirm('Delete ALL players, matches and data? This cannot be undone unless you have a backup.')){db={players:[],matches:[],settings:{theme:'light'}};save();closeModal();render();toast('All data deleted')}}
+render();
+</script>
+</body>
+</html>
