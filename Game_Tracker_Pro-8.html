@@ -14,7 +14,6 @@
 
 /* ================= LIGHT THEME ================= */
 :root{
-  /* Backgrounds */
   --bg:#f0f2f9;
   --bg-grad-1:#e0e7ff;
   --bg-grad-2:#fce7f3;
@@ -22,31 +21,21 @@
   --card:#ffffff;
   --card-2:#f8fafc;
   --card-glass:rgba(255,255,255,.72);
-
-  /* Text */
   --text:#0f172a;
   --text-2:#1e293b;
   --muted:#64748b;
   --muted-2:#94a3b8;
-
-  /* Lines */
   --line:#e5e9f2;
   --line-2:#eef2f8;
-
-  /* Primary (Purple) */
   --a:#6366f1;
   --a-2:#818cf8;
   --a-3:#a5b4fc;
   --a-bg:#eef2ff;
   --a-bg-2:#e0e7ff;
-
-  /* Secondary (Blue) */
   --b:#3b82f6;
   --b-2:#60a5fa;
   --b-3:#93c5fd;
   --b-bg:#eff6ff;
-
-  /* Status */
   --green:#10b981;
   --green-bg:#d1fae5;
   --red:#ef4444;
@@ -57,14 +46,6 @@
   --silver-bg:#f1f5f9;
   --bronze:#d97706;
   --bronze-bg:#fed7aa;
-
-  /* Uno classic */
-  --uno-red:#ef4444;
-  --uno-yellow:#facc15;
-  --uno-green:#22c55e;
-  --uno-blue:#3b82f6;
-
-  /* Gradients */
   --grad-main:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#3b82f6 100%);
   --grad-purple:linear-gradient(135deg,#8b5cf6,#6366f1);
   --grad-blue:linear-gradient(135deg,#3b82f6,#6366f1);
@@ -73,26 +54,18 @@
   --grad-bronze:linear-gradient(135deg,#fb923c,#d97706);
   --grad-green:linear-gradient(135deg,#34d399,#10b981);
   --grad-red:linear-gradient(135deg,#f87171,#ef4444);
-  --grad-glass:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.5));
-
-  /* Shadows */
   --sh-sm:0 2px 8px rgba(99,102,241,.06);
   --sh:0 8px 24px rgba(99,102,241,.10);
   --sh-lg:0 20px 48px rgba(99,102,241,.16);
   --sh-purple:0 12px 32px rgba(99,102,241,.32);
   --sh-blue:0 12px 32px rgba(59,130,246,.28);
-
-  /* Radius */
   --r-sm:12px;
   --r:18px;
   --r-lg:24px;
   --r-xl:32px;
-
-  /* Layout */
   --nav-h:76px;
 }
 
-/* ================= DARK THEME ================= */
 [data-theme="dark"]{
   --bg:#0a0c18;
   --bg-grad-1:#1a1040;
@@ -101,26 +74,21 @@
   --card:#141829;
   --card-2:#1a1f33;
   --card-glass:rgba(20,24,41,.72);
-
   --text:#f1f5f9;
   --text-2:#e2e8f0;
   --muted:#94a3b8;
   --muted-2:#64748b;
-
   --line:#232842;
   --line-2:#1e2338;
-
   --a:#818cf8;
   --a-2:#a5b4fc;
   --a-3:#c7d2fe;
   --a-bg:#1e1b4b;
   --a-bg-2:#312e81;
-
   --b:#60a5fa;
   --b-2:#93c5fd;
   --b-3:#bfdbfe;
   --b-bg:#172554;
-
   --green:#34d399;
   --green-bg:#064e3b;
   --red:#f87171;
@@ -131,9 +99,6 @@
   --silver-bg:#334155;
   --bronze:#fb923c;
   --bronze-bg:#431407;
-
-  --grad-glass:linear-gradient(135deg,rgba(30,35,60,.9),rgba(20,24,41,.5));
-
   --sh-sm:0 2px 8px rgba(0,0,0,.4);
   --sh:0 8px 24px rgba(0,0,0,.5);
   --sh-lg:0 20px 48px rgba(0,0,0,.6);
@@ -141,7 +106,6 @@
   --sh-blue:0 12px 32px rgba(59,130,246,.35);
 }
 
-/* ================= RESET ================= */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;padding:0}
 body{
@@ -155,8 +119,6 @@ body{
   transition:background .4s ease,color .3s ease;
   overflow-x:hidden;
 }
-
-/* Animated gradient background with floating blobs */
 body::before{
   content:"";
   position:fixed;
@@ -171,7 +133,6 @@ body::before{
   transition:opacity .4s ease;
 }
 [data-theme="dark"] body::before{opacity:.5}
-
 body::after{
   content:"";
   position:fixed;
@@ -183,7 +144,6 @@ body::after{
     radial-gradient(circle at 80% 70%, rgba(59,130,246,.12) 0%, transparent 25%);
   animation:blobMove 25s ease-in-out infinite;
 }
-
 @keyframes bgFloat{
   0%,100%{transform:translate(0,0) scale(1)}
   50%{transform:translate(-3%,2%) scale(1.08)}
@@ -194,12 +154,10 @@ body::after{
   50%{transform:translate(-2%,3%)}
   75%{transform:translate(2%,2%)}
 }
-
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 select,input{outline:none}
 
-/* ================= APP SHELL ================= */
 .app{
   max-width:1100px;
   margin:auto;
@@ -208,7 +166,6 @@ select,input{outline:none}
   position:relative;
 }
 
-/* ================= HEADER ================= */
 .top{
   position:sticky;
   top:0;
@@ -278,7 +235,6 @@ select,input{outline:none}
 }
 .iconbtn:active{transform:translateY(0) scale(.98)}
 
-/* ================= LAYOUT ================= */
 .wrap{padding:20px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -335,7 +291,7 @@ select,input{outline:none}
 .section h3{font-size:15px;margin:0;font-weight:700}
 
 .muted{color:var(--muted);font-size:13px}
-/* ================= STATS ================= */
+
 .stat{
   position:relative;
   overflow:hidden;
@@ -375,20 +331,7 @@ select,input{outline:none}
   -webkit-text-fill-color:transparent;
   background-clip:text;
 }
-.stat .delta{
-  font-size:11px;
-  font-weight:700;
-  margin-top:4px;
-  display:inline-flex;
-  align-items:center;
-  gap:3px;
-  padding:3px 7px;
-  border-radius:6px;
-}
-.delta.up{background:var(--green-bg);color:var(--green)}
-.delta.down{background:var(--red-bg);color:var(--red)}
 
-/* ================= BUTTONS ================= */
 .btn{
   border:0;
   border-radius:12px;
@@ -436,44 +379,25 @@ select,input{outline:none}
   background:var(--a-bg-2);
   box-shadow:0 8px 24px rgba(99,102,241,.15);
 }
-
 .btn.blue{
   background:var(--grad-blue);
   box-shadow:var(--sh-blue);
 }
-.btn.blue:hover{box-shadow:0 16px 40px rgba(59,130,246,.4)}
-
 .btn.danger{
   background:var(--red-bg);
   color:var(--red);
   box-shadow:none;
   border:1px solid color-mix(in srgb,var(--red) 20%,transparent);
 }
-.btn.danger:hover{background:color-mix(in srgb,var(--red) 15%,transparent)}
-
 .btn.green{
   background:var(--green-bg);
   color:var(--green);
   box-shadow:none;
   border:1px solid color-mix(in srgb,var(--green) 20%,transparent);
 }
-.btn.green:hover{background:color-mix(in srgb,var(--green) 18%,transparent)}
-
-.btn.small{
-  padding:9px 14px;
-  font-size:12.5px;
-  border-radius:10px;
-}
+.btn.small{padding:9px 14px;font-size:12.5px;border-radius:10px}
 .btn.block{width:100%}
-.btn.icon-only{
-  padding:0;
-  width:44px;
-  height:44px;
-  border-radius:12px;
-}
-.btn.icon-only.small{width:36px;height:36px;border-radius:10px}
 
-/* ================= PILLS & BADGES ================= */
 .pill{
   display:inline-flex;
   align-items:center;
@@ -485,46 +409,17 @@ select,input{outline:none}
   font-size:11.5px;
   font-weight:700;
   border:1px solid var(--a-bg-2);
-  transition:transform .2s;
 }
-.pill:hover{transform:scale(1.05)}
-.pill.gold{
-  background:var(--gold-bg);
-  color:var(--gold);
-  border-color:color-mix(in srgb,var(--gold) 25%,transparent);
-}
-.pill.green{
-  background:var(--green-bg);
-  color:var(--green);
-  border-color:color-mix(in srgb,var(--green) 25%,transparent);
-}
-.pill.red{
-  background:var(--red-bg);
-  color:var(--red);
-  border-color:color-mix(in srgb,var(--red) 25%,transparent);
-}
-.pill.blue{
-  background:var(--b-bg);
-  color:var(--b);
-  border-color:color-mix(in srgb,var(--b) 25%,transparent);
-}
-.pill.silver{
-  background:var(--silver-bg);
-  color:var(--silver);
-  border-color:color-mix(in srgb,var(--silver) 25%,transparent);
-}
-.pill.bronze{
-  background:var(--bronze-bg);
-  color:var(--bronze);
-  border-color:color-mix(in srgb,var(--bronze) 25%,transparent);
-}
+.pill.gold{background:var(--gold-bg);color:var(--gold)}
+.pill.green{background:var(--green-bg);color:var(--green)}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.blue{background:var(--b-bg);color:var(--b)}
+.pill.silver{background:var(--silver-bg);color:var(--silver)}
+.pill.bronze{background:var(--bronze-bg);color:var(--bronze)}
 
 .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.row.gap-12{gap:12px}
 .right{margin-left:auto}
-.col{display:flex;flex-direction:column;gap:8px}
 
-/* ================= NAV BAR ================= */
 .nav{
   position:fixed;
   bottom:0;
@@ -536,10 +431,8 @@ select,input{outline:none}
   -webkit-backdrop-filter:blur(24px) saturate(180%);
   border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0);
-  transition:background .3s,border-color .3s;
   box-shadow:0 -8px 32px rgba(0,0,0,.05);
 }
-[data-theme="dark"] .nav{box-shadow:0 -8px 32px rgba(0,0,0,.4)}
 .navin{
   max-width:1100px;
   margin:auto;
@@ -551,13 +444,12 @@ select,input{outline:none}
   padding:12px 4px 10px;
   font-size:10.5px;
   font-weight:700;
-  transition:all .25s;
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:3px;
   position:relative;
-  letter-spacing:.2px;
+  transition:all .25s;
 }
 .nav button .ic{
   font-size:22px;
@@ -580,22 +472,10 @@ select,input{outline:none}
   height:3px;
   background:var(--grad-main);
   border-radius:0 0 6px 6px;
-  box-shadow:0 2px 10px rgba(99,102,241,.6);
-  animation:navIn .35s cubic-bezier(.2,.9,.3,1.4);
-}
-@keyframes navIn{
-  from{width:0;opacity:0}
-  to{width:28px;opacity:1}
 }
 
-/* ================= TABLE ================= */
-.table{
-  width:100%;
-  border-collapse:collapse;
-  border-spacing:0;
-}
-.table th,
-.table td{
+.table{width:100%;border-collapse:collapse;border-spacing:0}
+.table th,.table td{
   padding:13px 10px;
   border-bottom:1px solid var(--line-2);
   font-size:13px;
@@ -609,24 +489,12 @@ select,input{outline:none}
   text-transform:uppercase;
   letter-spacing:.6px;
 }
-.table tbody tr{
-  transition:background .2s;
-}
-.table tbody tr:hover td{
-  background:var(--card-2);
-}
-.rank{
-  font-weight:900;
-  width:44px;
-  font-size:16px;
-  text-align:center;
-}
+.table tbody tr:hover td{background:var(--card-2)}
+.rank{font-weight:900;width:44px;font-size:16px;text-align:center}
 .rank.gold{color:var(--gold)}
 .rank.silver{color:var(--silver)}
 .rank.bronze{color:var(--bronze)}
-.rank .medal{font-size:18px}
 
-/* ================= EMPTY STATE ================= */
 .empty{
   text-align:center;
   padding:42px 20px;
@@ -646,7 +514,6 @@ select,input{outline:none}
   50%{transform:translateY(-6px)}
 }
 
-/* ================= FORMS ================= */
 .field{margin:14px 0}
 .field label{
   display:block;
@@ -654,10 +521,8 @@ select,input{outline:none}
   font-weight:700;
   margin-bottom:8px;
   color:var(--muted);
-  letter-spacing:.2px;
 }
-.field input,
-.field select{
+.field input,.field select{
   width:100%;
   border:1.5px solid var(--line);
   border-radius:12px;
@@ -668,24 +533,14 @@ select,input{outline:none}
   font-size:14px;
   font-weight:500;
 }
-.field input:focus,
-.field select:focus{
+.field input:focus,.field select:focus{
   border-color:var(--a);
   background:var(--card);
   box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 14%,transparent);
 }
-.field input::placeholder{color:var(--muted-2)}
 
-.filters{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-.checkgrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-}
+.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.checkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .check{
   border:1.5px solid var(--line);
   padding:12px 13px;
@@ -695,30 +550,20 @@ select,input{outline:none}
   align-items:center;
   gap:9px;
   cursor:pointer;
-  transition:all .2s cubic-bezier(.2,.9,.3,1.2);
+  transition:all .2s;
   background:var(--card-2);
   font-weight:600;
   user-select:none;
 }
-.check:hover{
-  border-color:var(--a-3);
-  background:var(--a-bg);
-  transform:translateY(-1px);
-}
-.check input{
-  margin:0;
-  accent-color:var(--a);
-  width:17px;
-  height:17px;
-  cursor:pointer;
-}
+.check:hover{border-color:var(--a-3);background:var(--a-bg)}
+.check input{margin:0;accent-color:var(--a);width:17px;height:17px;cursor:pointer}
 .check:has(input:checked){
   border-color:var(--a);
   background:var(--a-bg);
   color:var(--a);
   box-shadow:0 4px 12px rgba(99,102,241,.15);
 }
-/* ================= PODIUM (Top 3) ================= */
+
 .podium{
   display:grid;
   grid-template-columns:1fr 1.15fr 1fr;
@@ -733,7 +578,7 @@ select,input{outline:none}
   text-align:center;
   color:#fff;
   box-shadow:var(--sh-lg);
-  transition:transform .4s cubic-bezier(.2,.9,.3,1.3);
+  transition:transform .4s;
   position:relative;
   overflow:hidden;
   animation:podRise .6s cubic-bezier(.2,.9,.3,1.3) backwards;
@@ -744,23 +589,6 @@ select,input{outline:none}
 @keyframes podRise{
   from{opacity:0;transform:translateY(40px) scale(.85)}
   to{opacity:1;transform:translateY(0) scale(1)}
-}
-.pod::before{
-  content:"";
-  position:absolute;
-  top:-50%;
-  left:-50%;
-  width:200%;
-  height:200%;
-  background:radial-gradient(circle,rgba(255,255,255,.25),transparent 60%);
-  animation:podShine 4s ease-in-out infinite;
-}
-@keyframes podShine{
-  0%,100%{transform:translate(-30%,-30%)}
-  50%{transform:translate(30%,30%)}
-}
-.pod:hover{
-  transform:translateY(-6px) scale(1.02);
 }
 .pod .crown{
   font-size:26px;
@@ -780,7 +608,6 @@ select,input{outline:none}
   word-break:break-word;
   position:relative;
   z-index:1;
-  text-shadow:0 2px 4px rgba(0,0,0,.2);
 }
 .pod .pt{
   font-size:11.5px;
@@ -789,7 +616,6 @@ select,input{outline:none}
   margin-top:4px;
   position:relative;
   z-index:1;
-  letter-spacing:.3px;
 }
 .pod.p1{
   background:var(--grad-gold);
@@ -805,7 +631,6 @@ select,input{outline:none}
   display:flex;
   flex-direction:column;
   justify-content:center;
-  box-shadow:0 12px 32px rgba(148,163,184,.4);
 }
 .pod.p3{
   background:var(--grad-bronze);
@@ -813,10 +638,8 @@ select,input{outline:none}
   display:flex;
   flex-direction:column;
   justify-content:center;
-  box-shadow:0 12px 32px rgba(217,119,6,.35);
 }
 
-/* ================= PROGRESS BARS ================= */
 .bar{
   height:10px;
   background:var(--line);
@@ -830,24 +653,8 @@ select,input{outline:none}
   background:var(--grad-main);
   border-radius:99px;
   transition:width .8s cubic-bezier(.2,.9,.3,1.2);
-  position:relative;
-  overflow:hidden;
 }
-.bar i::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  animation:barShine 2s linear infinite;
-}
-@keyframes barShine{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(200%)}
-}
-.bar.thin{height:6px}
-.bar.thick{height:14px}
 
-/* ================= MODAL ================= */
 .modal{
   position:fixed;
   inset:0;
@@ -858,13 +665,9 @@ select,input{outline:none}
   display:none;
   align-items:flex-end;
   justify-content:center;
-  animation:fadeIn .25s;
 }
-.modal.show{display:flex}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
+.modal.show{display:flex;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .sheet{
   width:min(700px,100%);
   max-height:94vh;
@@ -899,23 +702,12 @@ select,input{outline:none}
   margin:-8px auto 16px;
 }
 
-/* ================= PLACES (Match order) ================= */
 .place{
   display:grid;
   grid-template-columns:46px 1fr;
   gap:10px;
   align-items:center;
   margin:9px 0;
-  animation:placeIn .3s backwards;
-}
-.place:nth-child(1){animation-delay:.05s}
-.place:nth-child(2){animation-delay:.1s}
-.place:nth-child(3){animation-delay:.15s}
-.place:nth-child(4){animation-delay:.2s}
-.place:nth-child(5){animation-delay:.25s}
-@keyframes placeIn{
-  from{opacity:0;transform:translateX(-10px)}
-  to{opacity:1;transform:translateX(0)}
 }
 .place .num{
   font-weight:900;
@@ -928,24 +720,10 @@ select,input{outline:none}
   place-items:center;
   background:var(--a-bg);
   color:var(--a);
-  transition:all .3s;
 }
-.place .num.g1{
-  background:var(--grad-gold);
-  color:#fff;
-  box-shadow:0 8px 20px rgba(245,158,11,.4);
-  transform:scale(1.05);
-}
-.place .num.g2{
-  background:var(--grad-silver);
-  color:#fff;
-  box-shadow:0 6px 16px rgba(148,163,184,.35);
-}
-.place .num.g3{
-  background:var(--grad-bronze);
-  color:#fff;
-  box-shadow:0 6px 16px rgba(217,119,6,.35);
-}
+.place .num.g1{background:var(--grad-gold);color:#fff;transform:scale(1.05)}
+.place .num.g2{background:var(--grad-silver);color:#fff}
+.place .num.g3{background:var(--grad-bronze);color:#fff}
 .place select{
   padding:12px 14px;
   border:1.5px solid var(--line);
@@ -954,15 +732,8 @@ select,input{outline:none}
   background:var(--card-2);
   color:var(--text);
   font-weight:600;
-  transition:all .2s;
-}
-.place select:focus{
-  border-color:var(--a);
-  background:var(--card);
-  box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 14%,transparent);
 }
 
-/* ================= TOAST ================= */
 .toast{
   display:none;
   position:fixed;
@@ -986,28 +757,6 @@ select,input{outline:none}
   to{transform:translate(-50%,0);opacity:1}
 }
 
-/* ================= CONFETTI (for wins) ================= */
-.confetti{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:70;
-  overflow:hidden;
-  display:none;
-}
-.confetti.show{display:block}
-.confetti i{
-  position:absolute;
-  width:10px;
-  height:10px;
-  top:-20px;
-  animation:confFall linear forwards;
-}
-@keyframes confFall{
-  to{transform:translateY(110vh) rotate(720deg)}
-}
-
-/* ================= KPI / HINTS ================= */
 .kpi{
   font-size:12px;
   color:var(--muted);
@@ -1018,140 +767,27 @@ select,input{outline:none}
   flex-wrap:wrap;
 }
 .kpi b{color:var(--text);font-weight:700}
-.kpi .dot{
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  background:var(--muted-2);
-}
-.medal{font-size:24px;line-height:1}
+.kpi .dot{width:4px;height:4px;border-radius:50%;background:var(--muted-2)}
 
-/* ================= CIRCULAR PROGRESS (Win Rate) ================= */
-.ring{
-  position:relative;
-  width:120px;
-  height:120px;
-  margin:0 auto;
-}
-.ring svg{
-  transform:rotate(-90deg);
-  width:100%;
-  height:100%;
-}
-.ring circle{
-  fill:none;
-  stroke-width:10;
-  stroke-linecap:round;
-}
-.ring .bg-c{stroke:var(--line)}
-.ring .fg-c{
-  stroke:url(#ringGrad);
-  stroke-dasharray:314;
-  stroke-dashoffset:314;
-  transition:stroke-dashoffset 1.2s cubic-bezier(.2,.9,.3,1.2);
-}
-.ring .val{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  font-weight:800;
-  color:var(--text);
-}
-.ring .val small{
-  font-size:12px;
-  color:var(--muted);
-  font-weight:700;
-  margin-left:2px;
-}
+.text-center{text-align:center}
+.mt-1{margin-top:6px}
+.mt-2{margin-top:12px}
+.mt-3{margin-top:18px}
+.mb-3{margin-bottom:18px}
 
-/* ================= CHART ================= */
-.chart{
-  width:100%;
-  height:130px;
-  position:relative;
-  margin:10px 0;
-}
-.chart svg{width:100%;height:100%;overflow:visible}
-.chart .wave{
-  fill:none;
-  stroke:url(#waveGrad);
-  stroke-width:3;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:1000;
-  stroke-dashoffset:1000;
-  animation:drawWave 2s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes drawWave{to{stroke-dashoffset:0}}
-.chart .area{
-  fill:url(#areaGrad);
-  opacity:0;
-  animation:fadeUp .8s .8s forwards;
-}
-@keyframes fadeUp{to{opacity:1}}
-.chart .dot{
-  fill:var(--card);
-  stroke:url(#waveGrad);
-  stroke-width:3;
-  opacity:0;
-  animation:dotPop .4s forwards;
-}
-@keyframes dotPop{to{opacity:1}}
-.chart .axis{
-  font-size:9px;
-  fill:var(--muted);
-  font-weight:600;
-}
-
-/* ================= SCROLLBAR ================= */
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{
-  background:var(--line);
-  border-radius:99px;
-}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--a-3)}
 
-/* ================= SKELETON LOADER ================= */
-.skeleton{
-  background:linear-gradient(90deg,var(--line) 0%,var(--line-2) 50%,var(--line) 100%);
-  background-size:200% 100%;
-  animation:skelShine 1.5s ease-in-out infinite;
-  border-radius:8px;
-}
-@keyframes skelShine{
-  0%{background-position:200% 0}
-  100%{background-position:-200% 0}
-}
-
-/* ================= PAGE TRANSITION ================= */
-.wrap{
-  animation:pageIn .4s cubic-bezier(.2,.9,.3,1.1);
-}
+.wrap{animation:pageIn .4s cubic-bezier(.2,.9,.3,1.1)}
 @keyframes pageIn{
   from{opacity:0;transform:translateY(10px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-/* ================= UTILITIES ================= */
-.text-center{text-align:center}
-.mt-0{margin-top:0}
-.mt-1{margin-top:6px}
-.mt-2{margin-top:12px}
-.mt-3{margin-top:18px}
-.mb-0{margin-bottom:0}
-.mb-1{margin-bottom:6px}
-.mb-2{margin-bottom:12px}
-.mb-3{margin-bottom:18px}
-.gap-2{gap:8px}
-.gap-3{gap:12px}
-
-/* ================= RESPONSIVE ================= */
 @media(max-width:720px){
   .grid{grid-template-columns:repeat(2,1fr)}
-  .grid3{grid-template-columns:repeat(3,1fr)}
   .grid2{grid-template-columns:1fr}
   .filters{grid-template-columns:1fr 1fr}
   .wrap{padding:14px}
@@ -1163,12 +799,7 @@ select,input{outline:none}
   .stat b{font-size:24px}
   .section h2{font-size:16px}
   .table th,.table td{padding:10px 6px;font-size:12px}
-  .podium{grid-template-columns:1fr 1.2fr 1fr;gap:8px}
-  .pod.p1{height:115px}
-  .pod.p2{height:95px}
-  .pod.p3{height:85px}
-  .pod .nm{font-size:12px}
-  .sheet{padding:20px 16px;border-radius:24px 24px 0 0}
+  .sheet{padding:20px 16px}
 }
 
 @media(max-width:400px){
@@ -1178,20 +809,13 @@ select,input{outline:none}
   .stat b{font-size:22px}
 }
 
-/* ================= REDUCED MOTION ================= */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
     animation-duration:.01ms!important;
     transition-duration:.01ms!important;
   }
 }
-
-/* ================= PRINT (bonus) ================= */
-@media print{
-  .nav,.top,.toast,.confetti{display:none!important}
-  body{background:#fff}
-  .card{box-shadow:none;border:1px solid #ddd}
-}
+</style>
 </head>
 <body>
 
@@ -1245,19 +869,14 @@ select,input{outline:none}
 <!-- ================= TOAST ================= -->
 <div class="toast" id="toast"></div>
 
-<!-- ================= CONFETTI ================= -->
-<div class="confetti" id="confetti"></div>
-
-</body>
-</html>
-<!-- ================= JAVASCRIPT ================= -->
+<!-- ================= JAVASCRIPT (INSIDE BODY — FIXED!) ================= -->
 <script>
-/* ============ SUPABASE SETUP (SAME) ============ */
+/* ============ SUPABASE SETUP ============ */
 const SUPABASE_URL = 'https://azcbpramtbjsufhcgoub.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_yjqbb9kMztjEei6VW3W1zQ_mcyK8Z9g';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-/* ============ LOCAL DB (SAME) ============ */
+/* ============ LOCAL DB ============ */
 const KEY='uno_no_mercy_v2';
 let db=JSON.parse(localStorage.getItem(KEY)||'{"players":[],"matches":[],"settings":{"theme":"light"}}');
 db.settings=db.settings||{};
@@ -1265,7 +884,7 @@ db.settings.activePlayers=Array.isArray(db.settings.activePlayers)?db.settings.a
 db.settings.theme=db.settings.theme||'light';
 let tab='home';
 
-/* ============ HELPERS (SAME) ============ */
+/* ============ HELPERS ============ */
 const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 
@@ -1281,7 +900,7 @@ function toggleTheme(){
   toast(db.settings.theme==='dark' ? '🌙 Dark mode' : '☀️ Light mode');
 }
 
-/* ============ SYNC FROM SUPABASE (SAME) ============ */
+/* ============ SYNC FROM SUPABASE ============ */
 async function syncFromSupabase(){
   if(!supabaseClient) return;
   try {
@@ -1309,7 +928,7 @@ async function syncFromSupabase(){
     save();
     render();
   } catch(e){
-    console.error(e);
+    console.error('Supabase sync error:', e);
   }
 }
 
@@ -1338,7 +957,7 @@ function fmt(d){
   });
 }
 
-/* ============ SCORING (SAME) ============ */
+/* ============ SCORING ============ */
 function scoring(n, pos) {
   if (pos === n) return 0;
   return n - pos + 1;
@@ -1355,7 +974,7 @@ function matchesFor(filters={}){
   return ms;
 }
 
-/* ============ CALC (SAME) ============ */
+/* ============ CALC ============ */
 function calc(players=db.players, matches=db.matches){
   return players.map(p=>{
     let rows = [];
@@ -1405,6 +1024,7 @@ function periodMatches(period){
   if(period==='year'){ from = new Date(now.getFullYear(),0,1).toISOString().slice(0,10) }
   return matchesFor({from, to});
 }
+
 /* ============ RENDER MAIN ============ */
 function render(){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.t===tab));
@@ -1427,42 +1047,18 @@ function home(){
 
   return `
   <div class="grid">
-    <div class="card stat">
-      <span class="lbl">🎮 Matches</span>
-      <b>${db.matches.length}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">👥 Players</span>
-      <b>${db.players.length}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">☀️ Today</span>
-      <b>${tm.length}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">🏅 Today's pts</span>
-      <b>${today.reduce((a,p)=>a+p.points,0)}</b>
-    </div>
+    <div class="card stat"><span class="lbl">🎮 Matches</span><b>${db.matches.length}</b></div>
+    <div class="card stat"><span class="lbl">👥 Players</span><b>${db.players.length}</b></div>
+    <div class="card stat"><span class="lbl">☀️ Today</span><b>${tm.length}</b></div>
+    <div class="card stat"><span class="lbl">🏅 Today's pts</span><b>${today.reduce((a,p)=>a+p.points,0)}</b></div>
   </div>
 
   ${podium.length>=3 ? `
     <div class="section"><h2>🏆 Top Players</h2><button class="btn secondary small" onclick="go('ranking')">View all</button></div>
     <div class="podium">
-      <div class="pod p2">
-        <span class="crown">🥈</span>
-        <div class="nm">${esc(podium[1].name)}</div>
-        <div class="pt">${podium[1].points} pts</div>
-      </div>
-      <div class="pod p1">
-        <span class="crown">👑</span>
-        <div class="nm">${esc(podium[0].name)}</div>
-        <div class="pt">${podium[0].points} pts</div>
-      </div>
-      <div class="pod p3">
-        <span class="crown">🥉</span>
-        <div class="nm">${esc(podium[2].name)}</div>
-        <div class="pt">${podium[2].points} pts</div>
-      </div>
+      <div class="pod p2"><span class="crown">🥈</span><div class="nm">${esc(podium[1].name)}</div><div class="pt">${podium[1].points} pts</div></div>
+      <div class="pod p1"><span class="crown">👑</span><div class="nm">${esc(podium[0].name)}</div><div class="pt">${podium[0].points} pts</div></div>
+      <div class="pod p3"><span class="crown">🥉</span><div class="nm">${esc(podium[2].name)}</div><div class="pt">${podium[2].points} pts</div></div>
     </div>
   ` : leader ? `
     <div class="section"><h2>🏆 Current Leader</h2></div>
@@ -1497,9 +1093,7 @@ function home(){
     </div>
   </div>
 
-  <div class="section">
-    <h2>☀️ Today's Leader</h2>
-  </div>
+  <div class="section"><h2>☀️ Today's Leader</h2></div>
   ${top && top.matches ? `
     <div class="card">
       <div class="row">
@@ -1512,10 +1106,7 @@ function home(){
       </div>
     </div>
   ` : `
-    <div class="card empty">
-      <span class="em">🎲</span>
-      No match played today.
-    </div>
+    <div class="card empty"><span class="em">🎲</span>No match played today.</div>
   `}
 
   <div class="section">
@@ -1526,8 +1117,7 @@ function home(){
     db.matches.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map(matchCard).join('')
     || `<div class="card empty"><span class="em">🎮</span>No matches yet.</div>`
   }
-`;
-
+  `;
 }
 
 /* ============ MATCH CARD ============ */
@@ -1544,7 +1134,6 @@ function matchCard(m){
     </div>
     <div style="margin-top:12px">
       ${sorted.map((r,i)=>{
-        let cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
         return `
         <div class="row" style="padding:9px 0;border-bottom:1px solid var(--line-2)">
           <span style="font-size:17px;width:24px;text-align:center">${medals[i]||'•'}</span>
@@ -1581,9 +1170,7 @@ function matchesPage(){
 /* ============ RANKING PAGE ============ */
 function rankingPage(){
   return `
-  <div class="section">
-    <h2>🏆 Custom Ranking</h2>
-  </div>
+  <div class="section"><h2>🏆 Custom Ranking</h2></div>
   <div class="card">
     <div class="filters">
       <div>
@@ -1643,12 +1230,8 @@ function rankingPage(){
   <div class="section"><h2>⚔️ Head-to-Head</h2></div>
   <div class="card">
     <div class="grid2">
-      <select id="h1">
-        ${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}
-      </select>
-      <select id="h2">
-        ${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}
-      </select>
+      <select id="h1">${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select>
+      <select id="h2">${db.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select>
     </div>
     <button class="btn mt-3" onclick="h2h()">⚔️ Compare</button>
     <div id="h2hbox"></div>
@@ -1775,9 +1358,7 @@ function playersPage(){
       }
     </div>
     ${db.players.length ? `
-      <button class="btn mt-3 block" onclick="startActiveMatch()">
-        🎮 Add Match — Start with selected
-      </button>
+      <button class="btn mt-3 block" onclick="startActiveMatch()">🎮 Add Match — Start with selected</button>
     ` : ''}
   </div>
 
@@ -1826,22 +1407,10 @@ function statsPage(){
   return `
   <div class="section"><h2>📊 Statistics</h2></div>
   <div class="grid">
-    <div class="card stat">
-      <span class="lbl">🏅 Total Points</span>
-      <b>${tot}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">🏆 Total Wins</span>
-      <b>${s.reduce((a,p)=>a+p.wins,0)}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">👥 Avg Size</span>
-      <b>${avgSize}</b>
-    </div>
-    <div class="card stat">
-      <span class="lbl">🔥 Best Streak</span>
-      <b>${bestStreak}</b>
-    </div>
+    <div class="card stat"><span class="lbl">🏅 Total Points</span><b>${tot}</b></div>
+    <div class="card stat"><span class="lbl">🏆 Total Wins</span><b>${s.reduce((a,p)=>a+p.wins,0)}</b></div>
+    <div class="card stat"><span class="lbl">👥 Avg Size</span><b>${avgSize}</b></div>
+    <div class="card stat"><span class="lbl">🔥 Best Streak</span><b>${bestStreak}</b></div>
   </div>
 
   <div class="section"><h2>📈 Player Progress</h2></div>
@@ -1866,6 +1435,7 @@ function statsPage(){
     `).join('') || '<div class="empty">No data yet.</div>'}
   </div>`;
 }
+
 /* ============ PLAYER MODAL ============ */
 function openPlayer(id=''){
   let p = db.players.find(x=>x.id===id) || {name:''};
@@ -2064,20 +1634,20 @@ function settings(){
   `);
 }
 
-/* ============ MODAL BACKDROP CLICK ============ */
+/* ============ MODAL BACKDROP ============ */
 document.getElementById('modal').addEventListener('click', e=>{
   if(e.target.id === 'modal') closeModal();
 });
 
-/* ============ ESC TO CLOSE ============ */
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape') closeModal();
 });
 
 /* ============ INIT ============ */
 applyTheme();
-syncFromSupabase();
 render();
+syncFromSupabase();
 </script>
+
 </body>
 </html>
